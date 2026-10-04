@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Minecraft Companion</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #101820;
+      color: white;
+      padding: 20px;
+    }
+
+    .app {
+      max-width: 600px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .card {
+      background: #1b2730;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 15px;
+    }
+
+    input,
+    textarea,
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+    }
+
+    input,
+    textarea {
+      background: #263640;
+      color: white;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .option {
+      background: #263640;
+      color: white;
+      border: 2px solid transparent;
+      cursor: pointer;
+    }
+
+    .option.selected {
+      border-color: #42d66f;
+      background: #203f2b;
+    }
+
+    .emoji {
+      font-size: 30px;
+    }
+
+    .create {
+      background: #42d66f;
+      color: #07100a;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .preview {
+      background: #111b21;
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    #status {
+      text-align: center;
+      color: #42d66f;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <h1>🤖 AI Minecraft Companion</h1>
+
+  <div class="card">
+    <h2>Nome da IA</h2>
+
+    <input
+      id="name"
+      type="text"
+      value="Alex"
+      maxlength="24"
+      placeholder="Nome da IA"
+    >
+  </div>
+
+  <div class="card">
+
+    <h2>Função da IA</h2>
+
+    <div class="grid">
+
+      <button class="option selected" data-role="companheiro">
+        <div class="emoji">🤝</div>
+        Companheiro
+        <br>
+        <small>Ajuda você</small>
+      </button>
+
+      <button class="option" data-role="guerreiro">
+        <div class="emoji">⚔️</div>
+        Guerreiro
+        <br>
+        <small>Luta e protege</small>
+      </button>
+
+      <button class="option" data-role="minerador">
+        <div class="emoji">⛏️</div>
+        Minerador
+        <br>
+        <small>Procura minérios</small>
+      </button>
+
+      <button class="option" data-role="construtor">
+        <div class="emoji">🏗️</div>
+        Construtor
+        <br>
+        <small>Constrói estruturas</small>
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    <h2>Personalidade</h2>
+
+    <div class="grid">
+
+      <button class="option selected" data-personality="feliz">
+        😄 Feliz
+      </button>
+
+      <button class="option" data-personality="corajoso">
+        😎 Corajoso
+      </button>
+
+      <button class="option" data-personality="calmo">
+        😌 Calmo
+      </button>
+
+      <button class="option" data-personality="engracado">
+        😂 Engraçado
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    <h2>Comando inicial</h2>
+
+    <textarea
+      id="command"
+      placeholder="Exemplo: Me ajude a encontrar diamantes."
+    ></textarea>
+
+  </div>
+
+  <div class="card preview">
+
+    <h2>Prévia da IA</h2>
+
+    <p id="preview">
+      Alex será um companheiro feliz.
+    </p>
+
+  </div>
+
+  <button id="create" class="create">
+    ✨ Criar IA
+  </button>
+
+  <p id="status"></p>
+
+</div>
+
+<script>
+
+let role = "companheiro";
+let personality = "feliz";
+
+const nameInput = document.getElementById("name");
+const commandInput = document.getElementById("command");
+const preview = document.getElementById("preview");
+const status = document.getElementById("status");
+
+const roleNames = {
+  companheiro: "companheiro",
+  guerreiro: "guerreiro",
+  minerador: "minerador",
+  construtor: "construtor"
+};
+
+function updatePreview() {
+
+  const name =
+    nameInput.value.trim() || "Alex";
+
+  let text =
+    name +
+    " será um " +
+    roleNames[role] +
+    " " +
+    personality +
+    ".";
+
+  if (commandInput.value.trim()) {
+
+    text +=
+      " Comando inicial: " +
+      commandInput.value.trim();
+
+  }
+
+  preview.textContent = text;
+}
+
+document
+  .querySelectorAll("[data-role]")
+  .forEach(button => {
+
+    button.addEventListener("click", () => {
+
+      document
+        .querySelectorAll("[data-role]")
+        .forEach(b =>
+          b.classList.remove("selected")
+        );
+
+      button.classList.add("selected");
+
+      role = button.dataset.role;
+
+      updatePreview();
+
+    });
+
+  });
+
+document
+  .querySelectorAll("[data-personality]")
+  .forEach(button => {
+
+    button.addEventListener("click", () => {
+
+      document
+        .querySelectorAll("[data-personality]")
+        .forEach(b =>
+          b.classList.remove("selected")
+        );
+
+      button.classList.add("selected");
+
+      personality =
+        button.dataset.personality;
+
+      updatePreview();
+
+    });
+
+  });
+
+nameInput.addEventListener(
+  "input",
+  updatePreview
+);
+
+commandInput.addEventListener(
+  "input",
+  updatePreview
+);
+
+document
+  .getElementById("create")
+  .addEventListener("click", () => {
+
+    const name =
+      nameInput.value.trim() || "Alex";
+
+    status.textContent =
+      '✅ IA "' +
+      name +
+      '" criada!';
+
+    console.log({
+
+      name: name,
+
+      role: role,
+
+      personality: personality,
+
+      command:
+        commandInput.value.trim()
+
+    });
+
+  });
+
+updatePreview();
+
+</script>
+
+</body>
+</html>
